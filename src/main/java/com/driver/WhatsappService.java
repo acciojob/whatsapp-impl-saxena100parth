@@ -18,8 +18,8 @@ public class WhatsappService {
         if(userCount==2){
             group.setName(users.get(1).getName());
         }else{
-            int groupCount = WhatsappRepository.getCustomGroupCount()+1;
-            WhatsappRepository.setCustomGroupCount(groupCount);
+            int groupCount = ++WhatsappRepository.customGroupCount;
+//            WhatsappRepository.setCustomGroupCount(groupCount);
             group.setName("Group "+ groupCount);
         }
         WhatsappRepository.getGroupUserMap().put(group,users);

@@ -14,7 +14,7 @@ public class WhatsappRepository {
     private static HashMap<Message, User> senderMap;
     private static HashMap<Group, User> adminMap;
     private static HashSet<User> userMobile;
-    private static int customGroupCount;
+    public static int customGroupCount;
     private static int messageId;
     private static HashSet<User> groupedUsers;
     private static HashSet<Message> allMessages;
