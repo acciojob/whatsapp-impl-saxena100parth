@@ -13,8 +13,7 @@ public class WhatsappService {
     public Group createGroup(List<User> users)
     {
         int userCount = users.size();
-        Group group = new Group();
-        group.setNumberOfParticipants(userCount);
+        Group group = new Group("temp",userCount ) ;
         User admin = users.get(0);
         if(userCount==2){
             group.setName(users.get(1).getName());
