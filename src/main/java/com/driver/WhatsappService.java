@@ -35,7 +35,7 @@ public class WhatsappService {
 
         int ID = WhatsappRepository.getMessageId()+1;
         WhatsappRepository.setMessageId(ID);
-        WhatsappRepository.getAllMessages().add(new Message(ID,content));
+        WhatsappRepository.getAllMessages().add(new Message(1,content));
 
         return ID;
     }
