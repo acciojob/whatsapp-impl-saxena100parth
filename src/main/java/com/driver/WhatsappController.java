@@ -24,6 +24,11 @@ public class WhatsappController {
 
     @PostMapping("/add-user")
     public String createUser(String name, String mobile) throws Exception {
+
+        User user = new User(name,mobile);
+        HashSet<User> S1 = WhatsappRepository.getUserMobile();
+
+        if(S1.contains(user)) throw new Exception("User already exists");
         //If the mobile number exists in database, throw "User already exists" exception
         //Otherwise, create the user and return "SUCCESS"
 
@@ -31,7 +36,15 @@ public class WhatsappController {
     }
 
     @PostMapping("/add-group")
-    public Group createGroup(List<User> users){
+    public Group createGroup(List<User> users)throws Exception{
+        int userCount = users.size();
+        if(userCount<2) throw new Exception("group contains at least 2 users");
+
+        for( User user : users){
+            if(WhatsappRepository.getGroupedUsers().contains(user)) throw new Exception("user already grouped");
+            WhatsappRepository.getGroupedUsers().add(user);
+        }
+
         // The list contains at least 2 users where the first user is the admin. A group has exactly one admin.
         // If there are only 2 users, the group is a personal chat and the group name should be kept as the name of the second user(other than admin)
         // If there are 2+ users, the name of group should be "Group count". For example, the name of first group would be "Group 1", second would be "Group 2" and so on.
@@ -54,6 +67,9 @@ public class WhatsappController {
 
     @PutMapping("/send-message")
     public int sendMessage(Message message, User sender, Group group) throws Exception{
+        if(!WhatsappRepository.getGroupUserMap().containsKey(group)) throw new Exception("Group does not exist");
+        List<User> member = WhatsappRepository.getGroupUserMap().get(group);
+        if(member.indexOf(sender)==-1) throw new Exception("You are not allowed to send message");
         //Throw "Group does not exist" if the mentioned group does not exist
         //Throw "You are not allowed to send message" if the sender is not a member of the group
         //If the message is sent successfully, return the final number of messages in that group.
@@ -62,6 +78,9 @@ public class WhatsappController {
     }
     @PutMapping("/change-admin")
     public String changeAdmin(User approver, User user, Group group) throws Exception{
+        if(!WhatsappRepository.getAdminMap().containsKey(group)) throw new Exception("Group does not exist");
+        if(WhatsappRepository.getAdminMap().get(group)!=approver) throw new Exception("Approver does not have rights");
+        if(WhatsappRepository.getGroupUserMap().get(group).indexOf(user)==-1) throw new Exception("User is not a participant");
         //Throw "Group does not exist" if the mentioned group does not exist
         //Throw "Approver does not have rights" if the approver is not the current admin of the group
         //Throw "User is not a participant" if the user is not a part of the group
