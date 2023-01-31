@@ -24,11 +24,7 @@ public class WhatsappController {
 
     @PostMapping("/add-user")
     public String createUser(String name, String mobile) throws Exception {
-
-        User user = new User(name,mobile);
-        HashSet<User> S1 = WhatsappRepository.getUserMobile();
-
-        if(S1.contains(user)) throw new Exception("User already exists");
+        if(WhatsappRepository.getUserMobile().contains(new User(name,mobile))) throw new Exception("User already exists");
         //If the mobile number exists in database, throw "User already exists" exception
         //Otherwise, create the user and return "SUCCESS"
 
@@ -42,7 +38,12 @@ public class WhatsappController {
 
         for( User user : users){
             if(WhatsappRepository.getGroupedUsers().contains(user)) throw new Exception("user already grouped");
+
+        }
+        for( User user : users){
             WhatsappRepository.getGroupedUsers().add(user);
+            WhatsappRepository.getUserMobile().add(user);
+
         }
 
         // The list contains at least 2 users where the first user is the admin. A group has exactly one admin.
@@ -91,6 +92,7 @@ public class WhatsappController {
 
     @DeleteMapping("/remove-user")
     public int removeUser(User user) throws Exception{
+
         //This is a bonus problem and does not contains any marks
         //A user belongs to exactly one group
         //If user is not found in any group, throw "User not found" exception

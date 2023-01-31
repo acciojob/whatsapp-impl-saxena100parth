@@ -32,8 +32,7 @@ public class WhatsappService {
 
     public Integer createMessage(String content){
 
-        int ID = WhatsappRepository.getMessageId();
-        ID++;
+        int ID = WhatsappRepository.getMessageId()+1;
         WhatsappRepository.setMessageId(ID);
         WhatsappRepository.getAllMessages().add(new Message(ID,content));
 
